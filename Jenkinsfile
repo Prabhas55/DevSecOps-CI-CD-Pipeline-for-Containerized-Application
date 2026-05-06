@@ -18,14 +18,9 @@ pipeline {
     }
 
     environment {
-        SCANNER_HOME        = tool 'mysonar'
-        APP_NAME            = 'tetrisgame'
-        DOCKER_IMAGE        = 'shaikmustafa/loki'
-        DOCKER_TAG          = 'mydockerimage'
-        K8S_NAMESPACE       = 'default'
-        SONAR_PROJECT_KEY   = 'tetrisgame'
-        SONAR_PROJECT_NAME  = 'tetrisgame'
+        SCANNER_HOME=tool 'mysonar'
     }
+
 
     stages {
 
@@ -37,19 +32,20 @@ pipeline {
         }
 
         // ── Stage 2: Clean Workspace ────────────────────────────
-        stage('Clean') {
+        stages {
+        stage ("Clean") {
             steps {
                 cleanWs()
-                echo '==> Workspace cleaned.'
             }
         }
+
 
         // ── Stage 3: Checkout Source Code ───────────────────────
         stage('Code') {
             steps {
                 git branch: 'main',
-                    url: 'https://github.com/YOUR_USERNAME/devsecops-tetris.git'
-                echo '==> Source code checked out.'
+                    url: 'https://github.com/prabhas95/devsecops-tetris.git'
+            
             }
         }
 
@@ -59,8 +55,8 @@ pipeline {
                 withSonarQubeEnv('mysonar') {
                     sh """
                         $SCANNER_HOME/bin/sonar-scanner \
-                        -Dsonar.projectName=${SONAR_PROJECT_NAME} \
-                        -Dsonar.projectKey=${SONAR_PROJECT_KEY}
+                        -Dsonar.projectName=tetrics \
+                        -Dsonar.projectKey=tetrics
                     """
                 }
             }
@@ -115,8 +111,8 @@ pipeline {
             steps {
                 script {
                     withDockerRegistry(credentialsId: 'docker-password') {
-                        sh "docker tag image1 ${DOCKER_IMAGE}:${DOCKER_TAG}"
-                        sh "docker push ${DOCKER_IMAGE}:${DOCKER_TAG}"
+                        sh "docker tag image1 prabhas95/tetrics:v1"
+                        sh "docker push prabhas95/tetrics:v1"
                     }
                 }
                 echo '==> Image pushed to DockerHub.'
@@ -126,7 +122,7 @@ pipeline {
         // ── Stage 11: Trivy Image Scan ──────────────────────────
         stage('Scan image') {
             steps {
-                sh "trivy image ${DOCKER_IMAGE}:${DOCKER_TAG}"
+                sh "trivy image prabhas95/tetrics:v1"
                 echo '==> Trivy image scan complete.'
             }
         }
