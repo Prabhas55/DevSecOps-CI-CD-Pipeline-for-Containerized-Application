@@ -1,28 +1,22 @@
 # Jenkins Setup Guide
 
 ## 1. Launch EC2 Instance
-- **Instance Type:** t2.large  
-- **OS:** Ubuntu 22.04 LTS  
+- **Instance Type:** t2.large   
 - **Storage:** 30 GB EBS  
-- **Security Group:** Open ports 8080 (Jenkins), 9000 (SonarQube), 3000 (App)
+- **Security Group:** Open ports 8080 (Jenkins), 9000 (SonarQube), 3000 (App) or allow all tarffic
 
 ---
 
 ## 2. Install Jenkins
 
 ```bash
-sudo apt update -y
-sudo apt install openjdk-17-jdk -y
+sudo yum  install openjdk-17-jdk -y
 
 # Add Jenkins repo
-curl -fsSL https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key | sudo tee \
-  /usr/share/keyrings/jenkins-keyring.asc > /dev/null
-echo deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] \
-  https://pkg.jenkins.io/debian-stable binary/ | sudo tee \
-  /etc/apt/sources.list.d/jenkins.list > /dev/null
+sudo wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo
+sudo rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io-2023.key
 
-sudo apt update -y
-sudo apt install jenkins -y
+sudo yum  install jenkins -y
 sudo systemctl start jenkins
 sudo systemctl enable jenkins
 ```
@@ -34,9 +28,8 @@ Access Jenkins: `http://<EC2-PUBLIC-IP>:8080`
 ## 3. Install Docker
 
 ```bash
-sudo apt install docker.io -y
-sudo usermod -aG docker jenkins
-sudo usermod -aG docker ubuntu
+sudo yum  install docker.io -y
+sudo systemctl start docker
 sudo chmod 777 /var/run/docker.sock
 sudo systemctl restart docker
 ```
@@ -46,7 +39,7 @@ sudo systemctl restart docker
 ## 4. Run SonarQube Container
 
 ```bash
-docker run -d --name sonar -p 9000:9000 sonarqube:lts-community
+docker run -itd --name sonar -p 9000:9000 sonarqube:lts-community
 ```
 
 Access SonarQube: `http://<EC2-PUBLIC-IP>:9000`  
@@ -78,8 +71,8 @@ Install from **Manage Jenkins → Plugins → Available plugins**:
 |------|------|---------|
 | JDK | `jdk17` | jdk-17.0.8.1+1 |
 | NodeJS | `node16` | NodeJs 16.2.0 |
-| SonarQube Scanner | `mysonar` | SonarQube Scanner 5.0.1.3006 |
-| Dependency-Check | `Dp-Check` | dependency-check 6.5.1 |
+| SonarQube Scanner | `mysonar` | latest version |
+| Dependency-Check | `Dp-Check` | latest version |
 
 ---
 
@@ -92,9 +85,6 @@ Install from **Manage Jenkins → Plugins → Available plugins**:
    - URL: `http://<EC2-IP>:9000`
    - Token: select `sonar-token`
 
-**Webhook (in SonarQube):**  
-`Administration → Configuration → Webhooks → Create`  
-URL: `http://<JENKINS-IP>:8080/sonarqube-webhook/`
 
 ---
 
