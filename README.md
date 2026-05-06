@@ -51,19 +51,13 @@ GitHub → Jenkins → SonarQube → Node/npm → OWASP → Docker → Trivy →
 ```
 devsecops-tetris/
 ├── README.md
-├── Dockerfile
 ├── Jenkinsfile                          # Main CI/CD pipeline
-├── sonar-project.properties             # SonarQube config
-├── .github/
-│   └── workflows/
-│       └── pr-check.yml                 # GitHub Actions PR checks
 ├── jenkins/
 │   └── setup-guide.md                   # Jenkins setup instructions
 ├── k8s/
 │   ├── deployment.yml                   # Kubernetes Deployment
 │   └── service.yml                      # Kubernetes Service (LoadBalancer)
 ├── monitoring/
-│   ├── prometheus-setup.md              # Prometheus install guide
 │   └── grafana-setup.md                 # Grafana dashboard setup
 ├── scripts/
 │   ├── install-jenkins.sh               # Jenkins server setup
@@ -92,6 +86,8 @@ devsecops-tetris/
 chmod +x scripts/install-jenkins.sh
 ./scripts/install-jenkins.sh
 ```
+
+
 
 ### Step 2 — Install Trivy
 ```bash
@@ -139,6 +135,27 @@ See [`monitoring/prometheus-setup.md`](monitoring/prometheus-setup.md) and [`mon
 | Splunk | Build Analysis dashboard with full Jenkins logs |
 | App | React Tetris game live on K8s LoadBalancer |
 
+
+<img width="1918" height="1078" alt="jenkins dash" src="https://github.com/user-attachments/assets/b784a581-8096-43a5-b0f1-28056082a391" />
+<img width="1918" height="1078" alt="jenkins" src="https://github.com/user-attachments/assets/9db26c10-651c-43b9-aa43-255c3a74a981" />
+<img width="1918" height="1078" alt="sonar1" src="https://github.com/user-attachments/assets/41a99858-351a-4bde-9c24-4134ac23fdfd" />
+<img width="1917" height="1078" alt="splunk" src="https://github.com/user-attachments/assets/3f7ec0ff-05d7-42b6-a43d-fc76e5bf7f76" />
+<img width="1918" height="1078" alt="slack" src="https://github.com/user-attachments/assets/9be60fd1-2abd-4c25-b63c-9504cc115fbf" />
+
+<img width="1918" height="1078" alt="kops" src="https://github.com/user-attachments/assets/3f1c28aa-f20f-4a18-a88b-9ee65085a246" /
+<img width="1917" height="1078" alt="argov2" src="https://github.com/user-attachments/assets/a3c5d42a-e02e-49c3-9afa-9cf6cdde8ab3" />
+<img width="1918" height="1078" alt="server" src="https://github.com/user-attachments/assets/d0709a15-783a-4a58-a813-f70b5bff95a1" />
+<img width="1918" height="1078" alt="garfana" src="https://github.com/user-attachments/assets/1942cbb6-a2e9-415e-b7af-f9333b027e6a" />
+
+
+SCREENSHOTS OF BOTH VERSIONS:
+<img width="1918" height="1078" alt="out1" src="https://github.com/user-attachments/assets/7c2fe7e4-5482-4318-bca4-4ace2c441289" />
+<img width="1918" height="1078" alt="out2" src="https://github.com/user-attachments/assets/51bd8797-b6a7-4d85-b398-2f8e21fecc86" />
+
+
+
+
+
 ---
 
 ## 🔐 Jenkins Credentials Required
@@ -161,7 +178,7 @@ See [`monitoring/prometheus-setup.md`](monitoring/prometheus-setup.md) and [`mon
 
 ---
 
-<img width="1918" height="1078" alt="jenkins dash" src="https://github.com/user-attachments/assets/e00f2291-3fc1-4136-a41c-21220d723207" />
+
 
 
 ## 👨‍💻 Author
