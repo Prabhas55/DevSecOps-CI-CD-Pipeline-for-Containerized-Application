@@ -14,24 +14,24 @@ GitHub → Jenkins → SonarQube → Node/npm → OWASP → Docker → Trivy →
 - Developer pushes code to `main` branch
 - Jenkins polls or webhook triggers the pipeline
 
-### 2. Jenkins — Tool Install (0.1s)
+### 2. Jenkins — Tool Install 
 - JDK 17 and Node.js 16 are configured as tools
 - Environment variable `SCANNER_HOME` set to SonarQube scanner path
 
-### 3. Jenkins — Clean (0.2s)
+### 3. Jenkins — Clean 
 - `cleanWs()` wipes the workspace before every build
 - Ensures a fresh, reproducible build environment
 
-### 4. Jenkins — Code (1s)
+### 4. Jenkins — Code 
 - Clones the GitHub repo (`main` branch)
 - Source code lands in Jenkins workspace
 
-### 5. SonarQube Analysis (22s)
+### 5. SonarQube Analysis
 - Runs `sonar-scanner` against the codebase
 - Checks for bugs, vulnerabilities, code smells, duplications
 - Results published to SonarQube dashboard
 
-### 6. Quality Gates (0.22s)
+### 6. Quality Gates
 - Jenkins waits for SonarQube to process results
 - If gate **FAILS** → pipeline can be configured to abort
 - In this project: `abortPipeline: false` (continue even if gate fails)
