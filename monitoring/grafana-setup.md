@@ -1,29 +1,51 @@
 # Grafana Setup on Kubernetes
 
-## 1. Create Grafana Namespace & Install
+# 1 .STEPS TO SETUP PROMETHEUS & GRAFANA IN KOPS:
+# STEP 1:
+INSTALL HEML:
+curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+chmod 700 get_helm.sh
+./get_helm.sh
+helm version
 
-```bash
+# STEP 2:
+INSTALL K8S METRICS SERVER:
+kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+Verify that the metrics-server deployment is running the desired number of pods 
+kubectl get pods -n kube-system
+kubectl get deployment metrics-server -n kube-system
+
+# STEP 3:
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm repo add grafana https://grafana.github.io/helm-charts
+UPDATE HELM CHART REPOS:
+helm repo update
+helm repo list
+
+# STEP 4:
+CREATE PROMETHEUS NAMESPACE:
+kubectl create namespace prometheus
+kubectl get ns
+
+# STEP 5:
+INSTALL PROMETHEUS:
+helm install prometheus prometheus-community/prometheus --namespace prometheus --set alertmanager.persistentVolume.storageClass="gp2" --set server.persistentVolume.storageClass="gp2"
+kubectl get pods -n prometheus
+kubectl get all -n prometheus
+
+# STEP 6:
+CREATE GRAFANA NAMESPACE:
 kubectl create namespace grafana
 
-helm repo add grafana https://grafana.github.io/helm-charts
-
-helm install grafana grafana/grafana \
-    --namespace grafana \
-    --set persistence.storageClassName="gp2" \
-    --set persistence.enabled=true \
-    --set adminPassword='EKS!sAWSome' \
-    --set service.type=LoadBalancer
-
-# Get pods
+# STEP 7
+INSTALL GRAFANA:
+helm install grafana grafana/grafana --namespace grafana --set persistence.storageClassName="gp2" --set persistence.enabled=true --set adminPassword='EKS!sAWSome' --set service.type=LoadBalancer
 kubectl get pods -n grafana
-
-# Get LoadBalancer URL
 kubectl get service -n grafana
-```
 
-Access Grafana at the **EXTERNAL-IP** shown in the service output.
 
-**Login:** `admin` / `EKS!sAWSome`
+**Copy the EXTERNAL-IP and paste in browser**
+
 
 ---
 
@@ -33,7 +55,7 @@ Access Grafana at the **EXTERNAL-IP** shown in the service output.
 2. Select **Prometheus**
 3. In **Connection URL**, enter:
    ```
-   http://prometheus-server.prometheus.svc.cluster.local
+   http://prometheus-server.prometheus.svc.cluster.local(default)
    ```
 4. Click **Save & Test** — you should see "Data source is working"
 
@@ -65,27 +87,3 @@ From your live cluster (as shown in screenshots):
 
 ---
 
-## 5. Loki + Promtail (Log Aggregation)
-
-```bash
-mkdir grafana_configs
-cd grafana_configs
-
-wget https://raw.githubusercontent.com/grafana/loki/v2.8.0/cmd/loki/loki-local-config.yaml -O loki-config.yaml
-wget https://raw.githubusercontent.com/grafana/loki/v2.8.0/clients/cmd/promtail/promtail-docker-config.yaml -O promtail-config.yaml
-
-# Run Loki
-sudo docker run -d --name loki \
-    -v $(pwd):/mnt/config \
-    -p 3100:3100 \
-    grafana/loki:2.8.0 \
-    --config.file=/mnt/config/loki-config.yaml
-
-# Run Promtail
-sudo docker run -d --name promtail \
-    -v $(pwd):/mnt/config \
-    -v /var/log:/var/log \
-    --link loki \
-    grafana/promtail:2.8.0 \
-    --config.file=/mnt/config/promtail-config.yaml
-```
