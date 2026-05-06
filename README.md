@@ -161,6 +161,9 @@ See [`monitoring/prometheus-setup.md`](monitoring/prometheus-setup.md) and [`mon
 
 ---
 
+<img width="1918" height="1078" alt="jenkins dash" src="https://github.com/user-attachments/assets/e00f2291-3fc1-4136-a41c-21220d723207" />
+
+
 ## 👨‍💻 Author
 
 Built as a DevSecOps capstone project demonstrating end-to-end CI/CD pipeline with security, monitoring, and observability.
