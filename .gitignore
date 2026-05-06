@@ -1,9 +1,0 @@
-node_modules/
-build/
-.env
-.env.local
-*.log
-trivyfs.txt
-dependency-check-report.xml
-*.tar.gz
-.DS_Store
