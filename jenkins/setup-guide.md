@@ -10,7 +10,7 @@
 ## 2. Install Jenkins
 
 ```bash
-sudo yum  install openjdk-17-jdk -y
+sudo dnf install java-21-amazon-corretto -y
 
 # Add Jenkins repo
 sudo wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo
