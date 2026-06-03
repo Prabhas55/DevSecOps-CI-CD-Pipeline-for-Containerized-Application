@@ -131,9 +131,7 @@ pipeline {
         stage('Deploy to K8s') {
             steps {
                 sh """
-                    kubectl apply -f k8s/deployment.yml
-                    kubectl apply -f k8s/service.yml
-                    kubectl rollout status deployment/tetris -n ${K8S_NAMESPACE}
+                    kubectl create -f deployment-service.yml
                 """
                 echo '==> Application deployed to Kubernetes.'
             }
